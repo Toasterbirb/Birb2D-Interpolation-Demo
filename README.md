@@ -4,3 +4,5 @@ This short demo of a smoothly moving green dot was made to learn how timestep/de
 The refreshrate in the demo is randomized for each run. The value is clamped between 5 and 400
 
 ![Screenshot](./screenshot.png)
+
+This demo also contains some ground work for reading pixel colors from bmp files to generate levels easily. This could be used to quickly make new levels for 2D-platformer games for example. The path in the demo is also sorted with distance calculations. The algorithm (if you can even call it that) could probably be a bit more optimized, but oh well...
