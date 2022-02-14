@@ -98,6 +98,8 @@ int main(int argc, char **argv)
 	double lastTime = 0;
 	double delta = 0;
 	std::vector<float> deltaList;
+	double deltaTotal;
+	double avgDelta;
 
 	while (GameRunning)
 	{
@@ -158,16 +160,16 @@ int main(int argc, char **argv)
 			window.refresh_rate = Birb::utils::randomInt(5, 400);
 			Birb::Debug::Log("New random target refreshrate: " + std::to_string(window.refresh_rate));
 
+			deltaTotal = 0;
+			for (int i = 0; i < deltaList.size(); i++)
+			{
+				deltaTotal += deltaList[i];
+			}
+			avgDelta = deltaTotal / deltaList.size();
+
 			nextPosition = 1;
 			pathTimer.Start();
 		}
-
-		double deltaTotal = 0;
-		for (int i = 0; i < deltaList.size(); i++)
-		{
-			deltaTotal += deltaList[i];
-		}
-		double avgDelta = deltaTotal / deltaList.size();
 
 		if (lastTime != 0 && delta != lastTime)
 			timerText.SetText("Timer: " + std::to_string(pathTimer.ElapsedSeconds()) + " (Last time: " + std::to_string(lastTime) + ", Delta: " + std::to_string(delta) + ", Avg. Delta: " + std::to_string(avgDelta) + ")");
