@@ -8,7 +8,7 @@ all: path_gen
 path_gen: main.o
 	mkdir -p build
 	rsync -av ./res ./build/
-	$(CC) $^ $(SDL_FLAGS) -lbirb2d $(WarningFlags) -o $(outputDir)/path_gen
+	$(CC) $^ -lbirb2d $(SDL_FLAGS) $(WarningFlags) -o $(outputDir)/path_gen
 
 main.o: ./src/main.cpp
 	$(CC) -c $^ -o main.o
