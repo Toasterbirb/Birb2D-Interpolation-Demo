@@ -6,6 +6,7 @@
 #include <birb2d/Entity.hpp>
 #include <birb2d/Physics.hpp>
 #include <birb2d/Utils.hpp>
+#include <birb2d/Diagnostics.hpp>
 
 int main(int argc, char **argv)
 {
@@ -23,24 +24,27 @@ int main(int argc, char **argv)
 	std::vector<Birb::Entity*> textEntities;
 
 	/* Interpolation text */
-	Birb::Entity interpolationText("Interpolation", Birb::Vector2int(10, 10), Birb::EntityComponent::TextComponent("Interpolation: 0", mainFont, &Birb::Colors::Black));
+	Birb::Entity interpolationText("Interpolation", Birb::Vector2int(10, 10), Birb::EntityComponent::Text("Interpolation: 0", mainFont, &Birb::Colors::Black));
 	textEntities.push_back(&interpolationText);
 
 	/* Frametime text */
-	Birb::Entity frameTimeText("Frametime", Birb::Vector2int(10, 30), Birb::EntityComponent::TextComponent("Frametime: 0", mainFont, &Birb::Colors::Black));
+	Birb::Entity frameTimeText("Frametime", Birb::Vector2int(10, 30), Birb::EntityComponent::Text("Frametime: 0", mainFont, &Birb::Colors::Black));
 	textEntities.push_back(&frameTimeText);
 
 	/* Refreshrate text */
-	Birb::Entity refreshrateText("Refreshrate", Birb::Vector2int(10, 50), Birb::EntityComponent::TextComponent("Refreshrate: 0", mainFont, &Birb::Colors::Black));
+	Birb::Entity refreshrateText("Refreshrate", Birb::Vector2int(10, 50), Birb::EntityComponent::Text("Refreshrate: 0", mainFont, &Birb::Colors::Black));
 	textEntities.push_back(&refreshrateText);
 
 	/* Timer text */
-	Birb::Entity timerText("Frametime", Birb::Vector2int(10, 90), Birb::EntityComponent::TextComponent("Timer: 0", mainFont, &Birb::Colors::Black));
+	Birb::Entity timerText("Frametime", Birb::Vector2int(10, 90), Birb::EntityComponent::Text("Timer: 0", mainFont, &Birb::Colors::Black));
 	textEntities.push_back(&timerText);
 
 	/* Run counter text */
-	Birb::Entity runCounterText("Runcount", Birb::Vector2int(10, 110), Birb::EntityComponent::TextComponent("Runs: 0", mainFont, &Birb::Colors::Black));
+	Birb::Entity runCounterText("Runcount", Birb::Vector2int(10, 110), Birb::EntityComponent::Text("Runs: 0", mainFont, &Birb::Colors::Black));
 	textEntities.push_back(&runCounterText);
+
+	/* Performance monitor */
+	Birb::Diagnostics::FrametimeGraph frametimeGraph(Birb::Rect(280, 10, 500, 80), 250, &timeStep);
 
 	/* Pixel data reading test */
 	SDL_Surface* levelPathDots = SDL_LoadBMP("./res/sprites/map1_path.bmp");
@@ -192,6 +196,8 @@ int main(int argc, char **argv)
 			Birb::Render::DrawEntity(*textEntities[i]);
 
 		Birb::Render::DrawCircle(Birb::Colors::Green, dotPosition, 6);
+
+		frametimeGraph.Render();
 		/* ------------------------ */
 
 		window.Display();
