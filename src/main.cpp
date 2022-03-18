@@ -7,6 +7,7 @@
 #include <birb2d/Physics.hpp>
 #include <birb2d/Utils.hpp>
 #include <birb2d/Diagnostics.hpp>
+#include <birb2d/Random.hpp>
 
 int main(int argc, char **argv)
 {
@@ -44,7 +45,7 @@ int main(int argc, char **argv)
 	textEntities.push_back(&runCounterText);
 
 	/* Performance monitor */
-	Birb::Diagnostics::FrametimeGraph frametimeGraph(Birb::Rect(280, 10, 500, 80), 250, &timeStep);
+	Birb::Diagnostics::FrametimeGraph frametimeGraph(Birb::Rect(280, 10, 500, 80), 250, timeStep);
 
 	/* Pixel data reading test */
 	SDL_Surface* levelPathDots = SDL_LoadBMP("./res/sprites/map1_path.bmp");
@@ -119,7 +120,6 @@ int main(int argc, char **argv)
 			timeStep.Step();
 		}
 
-		window.Clear();
 
 		/* Update debugging texts */
 		interpolationText.SetText("Interpolation: " + std::to_string(interpolation));
@@ -161,7 +161,7 @@ int main(int argc, char **argv)
 				deltaList.push_back(delta);
 
 			/* Randomize a new refreshrate */
-			window.refresh_rate = Birb::utils::randomInt(5, 400);
+			window.refresh_rate = Birb::Random::RandomInt(5, 400);
 			Birb::Debug::Log("New random target refreshrate: " + std::to_string(window.refresh_rate));
 
 			deltaTotal = 0;
@@ -182,6 +182,7 @@ int main(int argc, char **argv)
 		else
 			timerText.SetText("Timer: " + std::to_string(pathTimer.ElapsedSeconds()));
 
+		window.Clear();
 		/* Do rendering things here */
 		Birb::Render::DrawEntity(currentLevel);
 		//Birb::Render::DrawCircle(Birb::Colors::Red, startPoint, 4);
