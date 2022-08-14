@@ -1,13 +1,13 @@
 #include <vector>
-#include <birb2d/Logger.hpp>
-#include <birb2d/Renderwindow.hpp>
-#include <birb2d/Timestep.hpp>
-#include <birb2d/Values.hpp>
-#include <birb2d/Entity.hpp>
-#include <birb2d/Physics.hpp>
-#include <birb2d/Utils.hpp>
-#include <birb2d/Diagnostics.hpp>
-#include <birb2d/Random.hpp>
+#include "Logger.hpp"
+#include "Renderwindow.hpp"
+#include "Timestep.hpp"
+#include "Values.hpp"
+#include "Entity.hpp"
+#include "Physics.hpp"
+#include "Utils.hpp"
+#include "Diagnostics.hpp"
+#include "Random.hpp"
 
 int main(int argc, char **argv)
 {
@@ -21,27 +21,27 @@ int main(int argc, char **argv)
 	Birb::Entity currentLevel("Current level");
 
 	SDL_Texture* levelBackgroundTexture = Birb::Resources::LoadTexture("./res/sprites/map1.png");
-	TTF_Font* mainFont = Birb::Resources::LoadFont("./res/fonts/mononoki/mononoki-Bold.ttf", 20);
+	Birb::Font mainFont("./res/fonts/mononoki/mononoki-Bold.ttf", 20);
 	std::vector<Birb::Entity*> textEntities;
 
 	/* Interpolation text */
-	Birb::Entity interpolationText("Interpolation", Birb::Vector2int(10, 10), Birb::EntityComponent::Text("Interpolation: 0", mainFont, &Birb::Colors::Black));
+	Birb::Entity interpolationText("Interpolation", Birb::Vector2int(10, 10), Birb::EntityComponent::Text("Interpolation: 0", &mainFont, &Birb::Colors::Black));
 	textEntities.push_back(&interpolationText);
 
 	/* Frametime text */
-	Birb::Entity frameTimeText("Frametime", Birb::Vector2int(10, 30), Birb::EntityComponent::Text("Frametime: 0", mainFont, &Birb::Colors::Black));
+	Birb::Entity frameTimeText("Frametime", Birb::Vector2int(10, 30), Birb::EntityComponent::Text("Frametime: 0", &mainFont, &Birb::Colors::Black));
 	textEntities.push_back(&frameTimeText);
 
 	/* Refreshrate text */
-	Birb::Entity refreshrateText("Refreshrate", Birb::Vector2int(10, 50), Birb::EntityComponent::Text("Refreshrate: 0", mainFont, &Birb::Colors::Black));
+	Birb::Entity refreshrateText("Refreshrate", Birb::Vector2int(10, 50), Birb::EntityComponent::Text("Refreshrate: 0", &mainFont, &Birb::Colors::Black));
 	textEntities.push_back(&refreshrateText);
 
 	/* Timer text */
-	Birb::Entity timerText("Frametime", Birb::Vector2int(10, 90), Birb::EntityComponent::Text("Timer: 0", mainFont, &Birb::Colors::Black));
+	Birb::Entity timerText("Frametime", Birb::Vector2int(10, 90), Birb::EntityComponent::Text("Timer: 0", &mainFont, &Birb::Colors::Black));
 	textEntities.push_back(&timerText);
 
 	/* Run counter text */
-	Birb::Entity runCounterText("Runcount", Birb::Vector2int(10, 110), Birb::EntityComponent::Text("Runs: 0", mainFont, &Birb::Colors::Black));
+	Birb::Entity runCounterText("Runcount", Birb::Vector2int(10, 110), Birb::EntityComponent::Text("Runs: 0", &mainFont, &Birb::Colors::Black));
 	textEntities.push_back(&runCounterText);
 
 	/* Performance monitor */
@@ -53,7 +53,7 @@ int main(int argc, char **argv)
 	Uint8* pixels = Birb::Resources::CopyTexturePixels(levelPathDots, &w, &h, &p);
 	std::vector<Birb::Vector2int> pathPixelPositions;
 	Birb::Vector2int startPoint;
-	
+
 	SDL_Color color = Birb::utils::TexturePixelToColor(pixels, Birb::Vector2int(108, 4), 128);
 	//std::cout << "Color r: " << (int)color.r << std::endl;
 	//std::cout << "Color g: " << (int)color.g << std::endl;
@@ -94,7 +94,7 @@ int main(int argc, char **argv)
 	int nextPosition = 1;
 	float interpolation = 0;
 
-	Birb::Entity firstLevelBackground("Level 1 background", Birb::Rect(0, 0, window.window_dimensions.x, window.window_dimensions.y), levelBackgroundTexture);
+	Birb::Entity firstLevelBackground("Level 1 background", Birb::Rect(0, 0, window.dimensions.x, window.dimensions.y), levelBackgroundTexture);
 
 	currentLevel = firstLevelBackground;
 
@@ -105,6 +105,7 @@ int main(int argc, char **argv)
 	std::vector<float> deltaList;
 	double deltaTotal;
 	double avgDelta;
+	Birb::Random rand;
 
 	while (GameRunning)
 	{
@@ -126,7 +127,7 @@ int main(int argc, char **argv)
 		frameTimeText.SetText("Frametime: " + std::to_string(timeStep.deltaTime));
 		refreshrateText.SetText("Refreshrate: " + std::to_string(window.refresh_rate));
 		runCounterText.SetText("Runs: " + std::to_string(deltaList.size()));
-		
+
 
 		/* Move the green dot */
 		if (nextPosition <= roadPath.size() - 1)
@@ -161,7 +162,7 @@ int main(int argc, char **argv)
 				deltaList.push_back(delta);
 
 			/* Randomize a new refreshrate */
-			window.refresh_rate = Birb::Random::RandomInt(5, 400);
+			window.refresh_rate = rand.RandomInt(5, 400);
 			Birb::Debug::Log("New random target refreshrate: " + std::to_string(window.refresh_rate));
 
 			deltaTotal = 0;
@@ -206,8 +207,7 @@ int main(int argc, char **argv)
 		timeStep.End();
 	}
 
-	window.Cleanup();
-	SDL_Quit();
+	//SDL_Quit();
 
 	return 0;
 }
